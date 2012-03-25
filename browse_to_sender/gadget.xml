@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-  <ModulePrefs title="Browse to Sender"
-    description="Adds a hyperlink to the sender's domain"
+  <ModulePrefs title="Hello World"
+    description="Matches and echoes 'Hello World' string in emails"
     height="20"
-    author="Kim Gräsman"
-    author_email="kim@mvps.org"
-    author_location="Somwhere over the ocean">
+    author="Sarah M and Walter Q"
+    author_email="..."
+    author_location="Mountain View, CA">
 
     <!-- Declare feature dependencies. -->
 
     <!-- This one is not specific to Gmail contextual gadgets. -->
     <Require feature="dynamic-height"/>
+
+    <!-- The next feature, Caja, is optional, and is supported for
+     use only within test domains. Uncomment the tag only for
+     non-production gadgets. -->
+    <!-- <Require feature="caja"/> -->
 
     <!-- The next feature, google.contentmatch, is required for all
      Gmail contextual gadgets.
@@ -19,7 +24,7 @@
      in the manifest, but is still expected to be present. -->
     <Require feature="google.contentmatch">
       <Param name="extractors">
-        google.com:SenderEmailExtractor
+        google.com:HelloWorld
       </Param>
     </Require>
 
@@ -29,19 +34,26 @@
    "html" and "card" are required for all Gmail contextual gadgets. -->
   <Content type="html" view="card">
     <![CDATA[
-      <div id="browse_to_sender_container">
-        <a id="sender_link" href="">Browse to sender</a>
-      </div>
-      
+      <!-- Start with Single Sign-On -->
+      <script type="text/javascript" src="http://example.com/gadgets/sso.js"></script>
       <script type="text/javascript">
-        var matches = google.contentmatch.getContentMatches();
- 
-        var container = document.getElementById('browse_to_sender_container');
+
+        <!-- Fetch the array of content matches. -->
+        matches = google.contentmatch.getContentMatches();
+        var matchList = document.createElement('UL');
+        var listItem;
+        var extractedText;
+
+        <!-- Iterate through the array and display output for each match. -->
         for (var match in matches) {
-          container.appendChild(
-            document.createTextNode(match);
-          );
+          for (var key in matches[match]) {
+            listItem = document.createElement('LI');
+            extractedText = document.createTextNode(key + ": " + matches[match][key]);
+            listItem.appendChild(extractedText);
+            matchList.appendChild(listItem);
+          }
         }
+        document.body.appendChild(matchList);
         gadgets.window.adjustHeight(100);
       </script>
     ]]>
