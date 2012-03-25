@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="Browse to Sender"
+    description="Adds a hyperlink to the sender's domain"
+    height="20"
+    author="Kim Gr&auml;sman"
+    author_email="kim@mvps.org"
+    author_location="Somwhere over the ocean">
+
+    <!-- Declare feature dependencies. -->
+
+    <!-- This one is not specific to Gmail contextual gadgets. -->
+    <Require feature="dynamic-height"/>
+
+    <!-- The next feature, google.contentmatch, is required for all
+     Gmail contextual gadgets.
+     <Param> - specify one or more comma-separated extractor IDs in
+     a param named "extractors". This line is overridden by the extractor ID
+     in the manifest, but is still expected to be present. -->
+    <Require feature="google.contentmatch">
+      <Param name="extractors">
+        google.com:SenderEmailExtractor
+      </Param>
+    </Require>
+
+  </ModulePrefs>
+
+  <!-- Define the content type and display location. The settings
+   "html" and "card" are required for all Gmail contextual gadgets. -->
+  <Content type="html" view="card">
+    <![CDATA[
+      <div id="browse_to_sender_container">
+        <a id="sender_link" href="">Browse to sender</a>
+      </div>
+      
+      <script type="text/javascript">
+        var matches = google.contentmatch.getContentMatches();
+ 
+        var container = document.getElementById('browse_to_sender_container');
+        for (var match in matches) {
+          container.appendChild(
+            document.createTextNode(match);
+          );
+        }
+        gadgets.window.adjustHeight(100);
+      </script>
+    ]]>
+  </Content>
+</Module>
